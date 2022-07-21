@@ -29,5 +29,6 @@ func GetCmdStdout(cmd string) error {
 	if err2 != nil {
 		return err2
 	}
+	return nil
 
 }
