@@ -6,10 +6,14 @@ import (
 	"os/exec"
 )
 
-func GetCmdStdout(cmd string) {
+func GetCmdStdout(cmd string) error {
 	// cmdString := "kubectl -n shencq logs -f --tail 20 k8s-ping-9"
 	cmdExec := exec.Command("sh", "-c", cmd)
-	out, _ := cmdExec.StdoutPipe()
+	out, err := cmdExec.StdoutPipe()
+	if err != nil {
+		return err
+	}
+
 	scanner := bufio.NewScanner(out)
 	go func() {
 		for scanner.Scan() {
@@ -17,7 +21,13 @@ func GetCmdStdout(cmd string) {
 		}
 
 	}()
-	cmdExec.Start()
-	cmdExec.Wait()
+	err1 := cmdExec.Start()
+	if err != nil {
+		return err1
+	}
+	err2 := cmdExec.Wait()
+	if err2 != nil {
+		return err2
+	}
 
 }
